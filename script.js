@@ -28,6 +28,13 @@ function shuffle(array) {
     return array;
 }
 
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
 function createBoard() {
     
     symbols = cardsSymbols.slice(0, totalPairs);
@@ -106,7 +113,7 @@ function checkWin() {
     if (matches === rows * cols) {
         stopTimer();
         setTimeout(() => {
-            messageEl.textContent = `Congratulations! You won in ${moves} moves and ${time} seconds!`;
+            messageEl.textContent = `Congratulations! You won in ${moves} moves and ${formatTime(time)}!`;
             
 
         }, 500);
@@ -147,11 +154,11 @@ function setDifficulty() {
 function startTimer() {
     stopTimer();
     time = 0;
-    timeEl.textContent = time;
+    timeEl.textContent = formatTime(time);
 
     timerInterval = setInterval(() => {
         time++;
-        timeEl.textContent = time;
+        timeEl.textContent = formatTime(time);
     }, 1000);
 }
 

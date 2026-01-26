@@ -96,6 +96,8 @@ h1 {
 }
 
 #moves {
+    display: flex;    
+    align-items: center;
     font-size: 1.2rem;
     margin-bottom: 15px;
     color: black;
