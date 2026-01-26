@@ -27,7 +27,7 @@ body {
 }
 
 h1 {
-    font-size: 2.8rem;
+    font-size: 12;
     margin-bottom: 25px;
     color: black;
 }
@@ -49,7 +49,7 @@ h1 {
 .card {
     position: relative;
     background-color: lightblue;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,7 +79,7 @@ h1 {
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    border: 3px solid #333;
+    border: 3px solid lightblue;
     font-size: 3.5rem;
     font-weight: bold;
 }
@@ -123,3 +123,13 @@ h1 {
 #reset:hover {
     transition: scale(1.05);
 }
+
+select {
+    padding: 6px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    color: blue;
+    border-color: blue;
+}
+

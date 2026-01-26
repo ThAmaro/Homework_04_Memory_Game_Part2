@@ -10,10 +10,18 @@
     <div class="container">
         <div class="game-wrapper">
         <h1>Memory Game</h1>
-        <p id="moves">Moves: <span id="moves-count"></span></p>
-        <div id="message"></div>
+        <label for="difficulty"></label>
+        <select id="difficulty">
+            <option value="easy">Easy (4x4)</option>
+            <option value="medium">Medium (6x4)</option>
+            <option value="hard">Hard (6x6)</option>
+        </select>
         <button id="reset">New Game</button>
-
+        <p id="moves">Moves: <span id="moves-count"></span>
+        <span id="timer">Time: <span id="time">0</span></span>
+        </p>
+        <div id="message"></div>
+        
         <div id="board" class="board"></div>
         </div>
     </div>

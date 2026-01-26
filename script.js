@@ -2,14 +2,22 @@ const board = document.getElementById('board');
 const movesCounter = document.getElementById('moves-count');
 const messageEl = document.getElementById('message');
 const resetBtn = document.getElementById('reset');
+const difficultySelect = document.getElementById('difficulty');
+const timeEl = document.getElementById('time');
 
+let time = 0;
+let timerInterval = null;
+let rows = 4;
+let cols = 4;
+let totalPairs = 8;
 let cards = [];
 let flippedCards = [];
 let lockBoard = false;
 let moves = 0;
 let matches = 0;
 
-const cardsSymbols = ['🍎', '🍌', '🍇', '🍓', '🍍', '🥝', '🍉', '🍒'];
+const cardsSymbols = ['🍎', '🍌', '🍇', '🍓', '🍍', '🥝', '🍉', '🍒', '🍈', '🍊',
+     '🍋', '🍋‍🟩', '🥭', '🍏', '🍑', '🫐', '🍅', '🥥', ];
 let symbols = [];
 
 function shuffle(array) {
@@ -22,7 +30,8 @@ function shuffle(array) {
 
 function createBoard() {
     
-    symbols = [...cardsSymbols, ...cardsSymbols];
+    symbols = cardsSymbols.slice(0, totalPairs);
+    symbols = [...symbols, ...symbols];
     shuffle(symbols);
 
     board.innerHTML = '';
@@ -30,7 +39,7 @@ function createBoard() {
     flippedCards = [];
     lockBoard = false;
     
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < rows * cols; i++) {
         const card = document.createElement('div');
         card.classList.add('card');
         card.dataset.index = i;
@@ -94,9 +103,12 @@ function updateMoves() {
 }
 
 function checkWin() {
-    if (matches === 16) {
+    if (matches === rows * cols) {
+        stopTimer();
         setTimeout(() => {
-            messageEl.textContent = `Congratulations! You won in ${moves} moves!`;
+            messageEl.textContent = `Congratulations! You won in ${moves} moves and ${time} seconds!`;
+            
+
         }, 500);
     }
 }
@@ -106,9 +118,54 @@ function resetGame() {
     matches = 0;
     updateMoves();
     messageEl.textContent = '';
+    setDifficulty();
     createBoard();
+    startTimer();    
 }
 
-resetBtn.addEventListener('click', resetGame);
+function setDifficulty() {
+    const level = difficultySelect.value;
 
+    if (level === 'easy') {
+        rows = 4;
+        cols = 4;
+        totalPairs = 8;
+    } else if (level === 'medium') {
+        rows = 6;
+        cols = 4;
+        totalPairs = 12;
+    } else if (level === 'hard') {
+        rows = 6;
+        cols = 6;
+        totalPairs = 18;
+    }
+
+    board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    board.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+}
+
+function startTimer() {
+    stopTimer();
+    time = 0;
+    timeEl.textContent = time;
+
+    timerInterval = setInterval(() => {
+        time++;
+        timeEl.textContent = time;
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+
+setDifficulty();
 createBoard();
+startTimer();
+
+resetBtn.addEventListener('click', resetGame);
+difficultySelect.addEventListener('change', resetGame);
