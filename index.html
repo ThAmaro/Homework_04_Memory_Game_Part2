@@ -7,10 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Memory Game</h1>
+    <div class="container">
+        <div class="game-wrapper">
+        <h1>Memory Game</h1>
+        <p id="moves">Moves: <span id="moves-count"></span></p>
+        <div id="message"></div>
+        <button id="reset">New Game</button>
 
-    <div id="board" class="board"></div>
-
+        <div id="board" class="board"></div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
