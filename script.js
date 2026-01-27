@@ -5,6 +5,7 @@ const resetBtn = document.getElementById('reset');
 const difficultySelect = document.getElementById('difficulty');
 const timeEl = document.getElementById('time');
 
+let timerStarted = false;
 let time = 0;
 let timerInterval = null;
 let rows = 4;
@@ -63,7 +64,11 @@ function createBoard() {
 
 function flipCard(e) {
     const card = e.currentTarget;
-    const index = parseInt(card.dataset.index);
+    
+    if (!timerStarted) {
+        startTimer();
+        timerStarted = true;
+    }
 
     if (lockBoard || card.classList.contains('matched')) return;
 
@@ -125,9 +130,12 @@ function resetGame() {
     matches = 0;
     updateMoves();
     messageEl.textContent = '';
-    setDifficulty();
     createBoard();
-    startTimer();    
+    setDifficulty();
+    stopTimer();
+    time = 0;
+    timeEl.textContent = formatTime(time);
+    timerStarted = false;    
 }
 
 function setDifficulty() {
@@ -172,7 +180,4 @@ function stopTimer() {
 
 setDifficulty();
 createBoard();
-startTimer();
-
 resetBtn.addEventListener('click', resetGame);
-difficultySelect.addEventListener('change', resetGame);

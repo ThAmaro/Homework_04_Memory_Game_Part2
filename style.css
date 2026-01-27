@@ -80,7 +80,7 @@ h1 {
     justify-content: center;
     border-radius: 12px;
     border: 3px solid lightblue;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: bold;
 }
 
@@ -97,10 +97,16 @@ h1 {
 
 #moves {
     display: flex;    
+    justify-content: center;
     align-items: center;
+    gap: 20px;
     font-size: 1.2rem;
     margin-bottom: 15px;
     color: black;
+}
+
+#moves span{
+    font-weight: 600;
 }
 
 #message {
@@ -134,4 +140,3 @@ select {
     color: blue;
     border-color: blue;
 }
-
