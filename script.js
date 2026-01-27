@@ -4,6 +4,13 @@ const messageEl = document.getElementById('message');
 const resetBtn = document.getElementById('reset');
 const difficultySelect = document.getElementById('difficulty');
 const timeEl = document.getElementById('time');
+const flipSound = new Audio('flipcard.mp3');
+const matchSound = new Audio('correct.mp3');
+const winSound = new Audio('victory-shouts.mp3');
+
+flipSound.volume = 0.3;
+matchSound.volume = 0.5;
+winSound.volume = 0.6;
 
 let timerStarted = false;
 let time = 0;
@@ -74,6 +81,9 @@ function flipCard(e) {
 card.classList.add('flipped');
 flippedCards.push(card);
 
+flipSound.currentTime = 0;
+flipSound.play();
+
     if (flippedCards.length === 2) {
         lockBoard = true;
         moves++;
@@ -98,6 +108,7 @@ function disableCards() {
     matches += 2;
     flippedCards = [];
     lockBoard = false;
+    matchSound.play();
     checkWin();
 }
 
@@ -118,7 +129,7 @@ function checkWin() {
         stopTimer();
         setTimeout(() => {
             messageEl.textContent = `Congratulations! You won in ${moves} moves and ${formatTime(time)}!`;
-            
+            winSound.play();
 
         }, 500);
     }
