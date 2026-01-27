@@ -17,8 +17,7 @@ let lockBoard = false;
 let moves = 0;
 let matches = 0;
 
-const cardsSymbols = ['🍎', '🍌', '🍇', '🍓', '🍍', '🥝', '🍉', '🍒', '🍈', '🍊',
-     '🍋', '🍋‍🟩', '🥭', '🍏', '🍑', '🫐', '🍅', '🥥', ];
+const cardsSymbols = ['🍎', '🍌', '🍇', '🍓', '🍍', '🥝', '🍉', '🍒', '🍈', '🍊','🍋', '🍋‍🟩', '🥭', '🍏', '🍑', '🫐', '🍅', '🥥', ];
 let symbols = [];
 
 function shuffle(array) {
@@ -126,12 +125,12 @@ function checkWin() {
 }
 
 function resetGame() {
+    setDifficulty();
+    createBoard();
     moves = 0;
     matches = 0;
     updateMoves();
     messageEl.textContent = '';
-    createBoard();
-    setDifficulty();
     stopTimer();
     time = 0;
     timeEl.textContent = formatTime(time);
