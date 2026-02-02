@@ -71,12 +71,15 @@ function createBoard() {
 function flipCard(e) {
     const card = e.currentTarget;
     
+    if(lockBoard) return;
+    if(card.classList.contains('flipped')) return;
+    if(card.classList.contains('matched')) return;
+
     if (!timerStarted) {
         startTimer();
         timerStarted = true;
     }
 
-    if (lockBoard || card.classList.contains('matched')) return;
 
 card.classList.add('flipped');
 flippedCards.push(card);
