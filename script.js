@@ -10,6 +10,10 @@ const flipSound = new Audio('flipcard.mp3');
 const matchSound = new Audio('correct.mp3');
 const winSound = new Audio('victory-shouts.mp3');
 
+if (!localStorage.getItem('totalMoves')) {
+    localStorage.setItem('totalMoves', '0');
+}
+
 flipSound.volume = 0.3;
 matchSound.volume = 0.5;
 winSound.volume = 0.6;
@@ -262,6 +266,7 @@ function incrementGlobalMoves() {
     let total = Number(localStorage.getItem('totalMoves')) || 0;
     total++;
     localStorage.setItem('totalMoves', total);
+    updateGlobalMovesDisplay();
 }
 
 function updateGlobalMovesDisplay() {
