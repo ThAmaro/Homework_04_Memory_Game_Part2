@@ -1,8 +1,10 @@
+const Game_State_Key = 'memory-game-state';
 const board = document.getElementById('board');
 const movesCounter = document.getElementById('moves-count');
 const messageEl = document.getElementById('message');
 const resetBtn = document.getElementById('reset');
 const difficultySelect = document.getElementById('difficulty');
+const totalMovesEl = document.getElementById('total-moves');
 const timeEl = document.getElementById('time');
 const flipSound = new Audio('flipcard.mp3');
 const matchSound = new Audio('correct.mp3');
@@ -42,11 +44,13 @@ function formatTime(seconds) {
     return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 }
 
-function createBoard() {
-    
-    symbols = cardsSymbols.slice(0, totalPairs);
-    symbols = [...symbols, ...symbols];
-    shuffle(symbols);
+function createBoard(useSavedSymbols = false) {
+
+    if (!useSavedSymbols) {
+        symbols = cardsSymbols.slice(0, totalPairs);
+        symbols = [...symbols, ...symbols];
+        shuffle(symbols);
+    }
 
     board.innerHTML = '';
     cards = [];
@@ -59,8 +63,8 @@ function createBoard() {
         card.dataset.index = i;
         card.dataset.symbol = symbols[i];
         card.innerHTML = `
-        <div class="back">?</div>
-        <div class="front">${symbols[i]}</div>
+            <div class="back">?</div>
+            <div class="front">${symbols[i]}</div>
         `;
         card.addEventListener('click', flipCard);
         board.appendChild(card);
@@ -84,16 +88,19 @@ function flipCard(e) {
 card.classList.add('flipped');
 flippedCards.push(card);
 
+
 flipSound.currentTime = 0;
 flipSound.play();
 
     if (flippedCards.length === 2) {
         lockBoard = true;
         moves++;
-
+        incrementGlobalMoves();
         updateMoves();
+        saveGameState();
         checkForMatch();
     }
+
 }
 
 function checkForMatch() {
@@ -112,6 +119,7 @@ function disableCards() {
     flippedCards = [];
     lockBoard = false;
     matchSound.play();
+    saveGameState();
     checkWin();
 }
 
@@ -120,6 +128,7 @@ function unflipCards() {
         flippedCards.forEach(card => card.classList.remove('flipped'));
         flippedCards = [];
         lockBoard = false;
+        saveGameState();
     }, 1000);
 }
 
@@ -139,6 +148,7 @@ function checkWin() {
 }
 
 function resetGame() {
+    sessionStorage.removeItem(Game_State_Key);
     setDifficulty();
     createBoard();
     moves = 0;
@@ -190,7 +200,80 @@ function stopTimer() {
     }
 }
 
+function saveGameState() {
+    const state = {
+        symbols,
+        moves,
+        matches,
+        time,
+        difficulty: difficultySelect.value,
+        cardsState: cards.map(card => ({
+            flipped: card.classList.contains('flipped'),
+            matched: card.classList.contains('matched')
+        }))
+    };
+
+    sessionStorage.setItem(Game_State_Key, JSON.stringify(state));
+}
+
+function loadGameState() {
+    const saved = sessionStorage.getItem(Game_State_Key);
+    if (!saved) return false;
+
+    const state = JSON.parse(saved);
+
+    difficultySelect.value = state.difficulty;
+    setDifficulty();
+
+    symbols = state.symbols;
+    moves = state.moves;
+    time = state.time;
+
+    createBoard(true);
+
+    state.cardsState.forEach((cardState, index) => {
+        if (cardState.flipped) cards[index].classList.add('flipped');
+        if (cardState.matched) cards[index].classList.add('matched');
+    });
+
+    matches = state.cardsState.filter(c => c.matched).length;
+
+    movesCounter.textContent = moves;
+    timeEl.textContent = formatTime(time);
+
+    stopTimer();
+    timerStarted = true;
+
+    timerInterval = setInterval(() => {
+        time++;
+        timeEl.textContent = formatTime(time);
+    }, 1000);
+
+    checkWin();
+
+    return true;
+}
+
+difficultySelect.addEventListener('change', () => {
+    resetGame();
+});
+
+function incrementGlobalMoves() {
+    let total = Number(localStorage.getItem('totalMoves')) || 0;
+    total++;
+    localStorage.setItem('totalMoves', total);
+}
+
+function updateGlobalMovesDisplay() {
+    totalMovesEl.textContent = localStorage.getItem('totalMoves') || 0;
+}
+
+window.addEventListener('storage', updateGlobalMovesDisplay);
+updateGlobalMovesDisplay();
 
 setDifficulty();
-createBoard();
+if (!loadGameState()) {
+    createBoard();
+}
+
 resetBtn.addEventListener('click', resetGame);
